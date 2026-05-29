@@ -613,19 +613,13 @@ function checkPanCollision() {
     }
   }
 
-  // Normalize to target speed, allow small bonus from hard swipes
+  // Hard normalize to target speed — no exceptions, no post-normalize additions
   var speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
   var target = getSpeedForScore(score);
-  var maxSpeed = target * 1.15;
   if (speed > 0.001) {
-    var clampedSpeed = Math.min(speed, maxSpeed);
-    ball.vx = (ball.vx / speed) * clampedSpeed;
-    ball.vy = (ball.vy / speed) * clampedSpeed;
+    ball.vx = (ball.vx / speed) * target;
+    ball.vy = (ball.vy / speed) * target;
   }
-
-  // Slight horizontal aim influence from hit position on pan face
-  var hitPos = (ball.x - pan.x) / (pan.w / 2);
-  ball.vx += hitPos * 0.5;
 
   // Push ball well clear of pan
   var overlap = ball.r - dist + ball.r * 0.5 + 4;
@@ -2191,6 +2185,14 @@ function updateGame(dt) {
   if (ball.x - ball.r < 0) { ball.x = ball.r + 1; ball.vx = Math.abs(ball.vx); }
   if (ball.x + ball.r > W) { ball.x = W - ball.r - 1; ball.vx = -Math.abs(ball.vx); }
 
+  // Hard speed clamp after every frame — catches any accumulated speed from any source
+  var curSpd = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+  var maxSpd = getSpeedForScore(score) * 1.1;
+  if (curSpd > maxSpd && curSpd > 0.001) {
+    ball.vx = (ball.vx / curSpd) * maxSpd;
+    ball.vy = (ball.vy / curSpd) * maxSpd;
+  }
+
   // Top wall = death
   if (ball.y - ball.r < 0) {
     triggerDeath();
@@ -2213,9 +2215,9 @@ function updateGame(dt) {
     playHitSound();
 
     // Spawn appliances at milestones
-    if (score === 5  && appliances.length === 0) spawnAppliance(0);
-    else if (score === 15 && appliances.length === 1) spawnAppliance(1);
-    else if (score === 25 && appliances.length === 2) spawnAppliance(2);
+    if (score === 3  && appliances.length === 0) spawnAppliance(0);
+    else if (score === 10 && appliances.length === 1) spawnAppliance(1);
+    else if (score === 20 && appliances.length === 2) spawnAppliance(2);
   }
 
   // Appliance updates
@@ -2245,9 +2247,9 @@ function updateGame(dt) {
   }
 
   // Re-spawn appliances after they expire — guard with a cooldown to prevent per-frame spawning
-  if (score >= 5  && appliances.length === 0 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
-  if (score >= 15 && appliances.length === 1 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
-  if (score >= 25 && appliances.length < 3   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 3  && appliances.length === 0 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 10 && appliances.length === 1 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 20 && appliances.length < 3   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
   if (appSpawnCooldown > 0) appSpawnCooldown--;
 
   drawPan();
