@@ -16,8 +16,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5e6c8;font-family:
 
 /* ── TITLE SCREEN ── */
 #title-screen{background:rgba(245,230,200,0.0);justify-content:center;padding-bottom:80px}
-.title-emoji{font-size:clamp(5rem,20vw,9rem);animation:bounce 1.8s ease-in-out infinite;display:block;filter:drop-shadow(0 8px 16px rgba(180,100,40,0.3))}
-@keyframes bounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-18px) rotate(5deg)}}
+#title-dumpling-canvas{display:block;margin:0 auto;filter:drop-shadow(0 8px 16px rgba(180,100,40,0.3))}
 .title-name{font-family:'Fredoka One',cursive;font-size:clamp(3rem,13vw,6rem);color:#c44d28;text-shadow:3px 3px 0 #ff9966,5px 5px 0 rgba(180,80,40,0.2);letter-spacing:0.05em;margin-top:0.2em;line-height:1}
 .title-sub{font-size:clamp(0.8rem,3vw,1rem);color:#a06030;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-top:1.4em;opacity:0.8}
 .title-btn{margin-top:1.8em;padding:16px 48px;border-radius:100px;background:linear-gradient(145deg,#ff7043,#e53935);border:none;color:#fff;font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,5vw,1.6rem);letter-spacing:0.08em;cursor:pointer;box-shadow:0 6px 0 #b71c1c,0 8px 20px rgba(200,50,30,0.4);transition:all 0.1s;-webkit-tap-highlight-color:transparent}
@@ -134,11 +133,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5e6c8;font-family:
 </div>
 
 <!-- SOUND BUTTON -->
-<button id="sound-btn" aria-label="Toggle sound">🔇</button>
+<button id="sound-btn" aria-label="Toggle sound">
+  <svg id="sound-icon-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+    <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+  </svg>
+  <svg id="sound-icon-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg>
+</button>
 
 <!-- TITLE SCREEN -->
 <div class="screen active" id="title-screen">
-  <span class="title-emoji">🥟</span>
+  <canvas id="title-dumpling-canvas" width="140" height="140" style="display:block;margin:0 auto"></canvas>
   <div class="title-name">Dumpling!</div>
   <div class="title-sub">the 5-second rule does not apply here</div>
   <button class="title-btn" id="start-btn">Let's Cook!</button>
@@ -149,49 +157,55 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5e6c8;font-family:
 <div id="countdown"><div id="countdown-num">3</div></div>
 
 <!-- INFO BUTTON (fixed bottom left, only on title) -->
-<button id="info-btn" aria-label="How to play">ℹ️</button>
+<button id="info-btn" aria-label="How to play">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="8" r="0.5" fill="currentColor" stroke="none"/>
+    <line x1="12" y1="12" x2="12" y2="17"/>
+  </svg>
+</button>
 
 <!-- INFO SCREEN -->
 <div class="screen" id="info-screen">
   <div class="info-title">How to Play</div>
   <div class="info-card">
     <div class="info-row">
-      <div class="info-icon">🍳</div>
+      <div class="info-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c44d28" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M7 10h6M10 7v6"/><rect x="6" y="17" width="8" height="3" rx="1"/></svg></div>
       <div class="info-text">
         <strong>Drag the Pan</strong>
         <span>Tap or drag anywhere on screen to move the frying pan. It follows your finger.</span>
       </div>
     </div>
     <div class="info-row">
-      <div class="info-icon">🥟</div>
+      <div class="info-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c44d28" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4M12 16h.01" stroke-width="2.5"/></svg></div>
       <div class="info-text">
         <strong>Keep it Alive</strong>
         <span>The dumpling bounces around the kitchen. Hit it with the pan before it escapes!</span>
       </div>
     </div>
     <div class="info-row">
-      <div class="info-icon">💀</div>
+      <div class="info-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c44d28" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
       <div class="info-text">
         <strong>Two Ways to Die</strong>
         <span>The dumpling dies if it falls off the bottom or flies off the top. Left and right walls bounce it back safely.</span>
       </div>
     </div>
     <div class="info-row">
-      <div class="info-icon">⭐</div>
+      <div class="info-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c44d28" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
       <div class="info-text">
         <strong>Score Points</strong>
-        <span>Each pan hit = 1 point. Obstacles appear after 5 hits to mix things up. Speed increases the longer you survive!</span>
+        <span>Each pan hit = 1 point. Obstacles appear after 3 hits to mix things up. Speed increases the longer you survive!</span>
       </div>
     </div>
     <div class="info-row">
-      <div class="info-icon">🔓</div>
+      <div class="info-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#c44d28" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <div class="info-text">
         <strong>Unlock More</strong>
         <span>Beat your high score to unlock new foods. Play more games to unlock new restaurants!</span>
       </div>
     </div>
   </div>
-  <button class="info-back-btn" id="info-back-btn">Got it! 👍</button>
+  <button class="info-back-btn" id="info-back-btn">Got it!</button>
 </div>
 
 <!-- FOOD SELECTOR SCREEN -->
@@ -199,8 +213,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5e6c8;font-family:
   <div id="food-screen-header">
     <div class="food-screen-title">Customize!</div>
     <div class="selector-tabs">
-      <div class="selector-tab active" id="tab-food" onclick="switchTab('food')">🥟 Food</div>
-      <div class="selector-tab" id="tab-bg" onclick="switchTab('bg')">🍽️ Restaurant</div>
+      <div class="selector-tab active" id="tab-food" onclick="switchTab('food')">Food</div>
+      <div class="selector-tab" id="tab-bg" onclick="switchTab('bg')">Restaurant</div>
     </div>
   </div>
   <div id="food-screen-scroll">
@@ -215,21 +229,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#f5e6c8;font-family:
       <div class="food-screen-sub" style="margin-bottom:10px">unlock new restaurants by playing more games</div>
       <div class="food-grid" id="bg-grid"></div>
     </div>
-    <button class="food-cook-btn" id="food-cook-btn">Cook It! 🍳</button>
+    <button class="food-cook-btn" id="food-cook-btn">Cook It!</button>
     <button class="food-back-btn" id="food-back-btn">← back</button>
   </div>
 </div>
 
 <!-- GAME OVER SCREEN -->
 <div class="screen" id="gameover-screen">
-  <div class="go-emoji" id="go-emoji">🥟</div>
+  <canvas id="death-face-canvas" width="100" height="100" style="display:block;margin:0 auto"></canvas>
   <div class="go-title" id="go-title">Dumpling Dead!</div>
   <div class="go-score-label">your score</div>
   <div class="go-score" id="go-score">0</div>
   <div class="go-best" id="go-best">best: <span id="go-best-num">0</span></div>
   <div class="go-btn-row">
     <button class="go-btn" id="retry-btn">Try Again!</button>
-    <button class="go-btn secondary" id="go-food-btn">Change Food</button>
+    <button class="go-btn secondary" id="go-food-btn">Food / Restaurant</button>
   </div>
 </div>
 
@@ -260,15 +274,15 @@ var audioCtx = null;
 // ── Food System ──
 var FOODS = [
   { id: 'dumpling',  name: 'Dumpling',  unlock: 0   },
-  { id: 'egg',       name: 'Egg',       unlock: 25  },
-  { id: 'meatball',  name: 'Meatball',  unlock: 50  },
-  { id: 'tomato',    name: 'Tomato',    unlock: 75  },
-  { id: 'apple',     name: 'Apple',     unlock: 100 },
-  { id: 'cheese',    name: 'Cheese',    unlock: 125 },
+  { id: 'egg',       name: 'Egg',       unlock: 10  },
+  { id: 'meatball',  name: 'Meatball',  unlock: 25  },
+  { id: 'tomato',    name: 'Tomato',    unlock: 50  },
+  { id: 'apple',     name: 'Apple',     unlock: 75  },
+  { id: 'cheese',    name: 'Cheese',    unlock: 100 },
   { id: 'sushi',     name: 'Sushi Roll',unlock: 150 },
   { id: 'cookie',    name: 'Cookie',    unlock: 200 },
   { id: 'donut',     name: 'Donut',     unlock: 250 },
-  { id: 'peach',     name: 'Peach',     unlock: 325 },
+  { id: 'peach',     name: 'Peach',     unlock: 300 },
   { id: 'mochi',     name: 'Mochi',     unlock: 500 },
   { id: 'truffle',   name: 'Truffle',   unlock: 1000}
 ];
@@ -277,17 +291,17 @@ var selectedFood = 'dumpling';
 // ── Background System ──
 var BACKGROUNDS = [
   { id: 'cozy',       name: 'Cozy Restaurant',   unlock: 0   },
-  { id: 'night',      name: 'Midnight Cafe',     unlock: 8   },
-  { id: 'market',     name: 'Outdoor Market',  unlock: 12  },
-  { id: 'bakery',     name: 'Enchanted Bakery',unlock: 23  },
-  { id: 'diner',      name: 'Retro Diner',     unlock: 24  },
-  { id: 'underwater', name: 'Coral Cantina',      unlock: 32  },
-  { id: 'medieval',   name: 'Medieval Tavern',    unlock: 42  },
-  { id: 'treehouse',  name: 'Canopy Kitchen',     unlock: 67  },
-  { id: 'space',      name: 'Zero Gravity Grill', unlock: 69  },
-  { id: 'arctic',     name: 'Polar Plate',        unlock: 420 },
-  { id: 'haunted',    name: 'Haunted Eatery',     unlock: 500 },
-  { id: 'desert',     name: 'Sahara Spoon',       unlock: 1000}
+  { id: 'night',      name: 'Midnight Cafe',      unlock: 5   },
+  { id: 'market',     name: 'Outdoor Market',     unlock: 10  },
+  { id: 'bakery',     name: 'Enchanted Bakery',   unlock: 20  },
+  { id: 'diner',      name: 'Retro Diner',        unlock: 30  },
+  { id: 'underwater', name: 'Coral Cantina',      unlock: 40  },
+  { id: 'medieval',   name: 'Medieval Tavern',    unlock: 50  },
+  { id: 'treehouse',  name: 'Canopy Kitchen',     unlock: 75  },
+  { id: 'space',      name: 'Zero Gravity Grill', unlock: 100 },
+  { id: 'arctic',     name: 'Polar Plate',        unlock: 200 },
+  { id: 'haunted',    name: 'Haunted Eatery',     unlock: 300 },
+  { id: 'desert',     name: 'Sahara Spoon',       unlock: 500 }
 ];
 var selectedBg = 'cozy';
 var totalGamesPlayed = 0;
@@ -491,17 +505,19 @@ function resetGame() {
 function getSpeedForScore(s) {
   var multiplier;
   if (s <= 5) {
-    multiplier = 1.0 + s * 0.04;       // 1.0 → 1.2  comfortable start
-  } else if (s <= 15) {
-    multiplier = 1.2 + (s - 5) * 0.06; // 1.2 → 1.8  noticeable ramp
-  } else if (s <= 30) {
-    multiplier = 1.8 + (s - 15) * 0.08;// 1.8 → 3.0  getting spicy
+    multiplier = 1.0 + s * 0.04;        // 1.0 → 1.2  comfortable start
+  } else if (s <= 10) {
+    multiplier = 1.2 + (s - 5) * 0.06;  // 1.2 → 1.5  warming up
+  } else if (s <= 20) {
+    multiplier = 1.5 + (s - 10) * 0.14; // 1.5 → 2.9  steep ramp
+  } else if (s <= 35) {
+    multiplier = 2.9 + (s - 20) * 0.12; // 2.9 → 4.7  getting intense
   } else if (s <= 50) {
-    multiplier = 3.0 + (s - 30) * 0.06;// 3.0 → 4.2  fast
+    multiplier = 4.7 + (s - 35) * 0.08; // 4.7 → 5.9  very fast
   } else {
-    multiplier = 4.2 + (s - 50) * 0.02;// 4.2+        brutal
+    multiplier = 5.9 + (s - 50) * 0.03; // 5.9+        brutal
   }
-  return BASE_SPEED * Math.min(multiplier, 6.0);
+  return BASE_SPEED * Math.min(multiplier, 7.5);
 }
 
 function normalizeSpeed() {
@@ -2236,9 +2252,10 @@ function updateGame(dt) {
       appliances.splice(i, 1);
       continue;
     }
-    // Gentle drift after score 40
-    if (score >= 40) {
-      app.driftAngle += app.driftSpeed * 16;
+    // Drift starts at score 20 (was 40), gets faster as score climbs
+    if (score >= 20) {
+      var driftMult = 1 + (score - 20) * 0.04; // speeds up over time
+      app.driftAngle += app.driftSpeed * 16 * Math.min(driftMult, 4);
       app.x = app.baseX + Math.cos(app.driftAngle) * app.driftRadius;
       app.y = app.baseY + Math.sin(app.driftAngle) * app.driftRadius * 0.5;
     }
@@ -2246,10 +2263,13 @@ function updateGame(dt) {
     drawAppliance(app);
   }
 
-  // Re-spawn appliances after they expire — guard with a cooldown to prevent per-frame spawning
+  // Re-spawn appliances — more obstacles at higher scores
+  var maxApps = score >= 40 ? 5 : score >= 30 ? 4 : score >= 20 ? 3 : score >= 10 ? 2 : 1;
   if (score >= 3  && appliances.length === 0 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
-  if (score >= 10 && appliances.length === 1 && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 10 && appliances.length < 2   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
   if (score >= 20 && appliances.length < 3   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 30 && appliances.length < 4   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
+  if (score >= 40 && appliances.length < 5   && appSpawnCooldown === 0) { spawnAppliance(Math.floor(Math.random() * 3)); appSpawnCooldown = 60; }
   if (appSpawnCooldown > 0) appSpawnCooldown--;
 
   drawPan();
@@ -2294,8 +2314,10 @@ function triggerDeath() {
   document.getElementById('go-title').textContent = (foodNames[selectedFood] || 'Dumpling') + ' Dead!';
 
   var goEmoji = document.getElementById('go-emoji');
-  var splats = ['😵','💀','😭','🥺'];
-  goEmoji.textContent = splats[Math.floor(Math.random() * splats.length)];
+  if (goEmoji) goEmoji.textContent = ''; // clear any old emoji fallback
+  // Draw sad face on death canvas
+  var dfc = document.getElementById('death-face-canvas');
+  if (dfc) drawDeathFace(dfc.getContext('2d'), 100, 100);
 
   var goBest = document.getElementById('go-best');
   // Clear any badges/teasers from previous death before rebuilding
@@ -2320,7 +2342,7 @@ function triggerDeath() {
     setTimeout(function() {
       var badge = document.createElement('div');
       badge.style.cssText = 'margin-top:8px;background:#ffd54f;color:#e65100;font-weight:800;font-size:0.8rem;padding:5px 14px;border-radius:100px;animation:pop 0.4s cubic-bezier(0.2,2,0.4,1) both;letter-spacing:0.08em;font-family:Nunito,sans-serif';
-      badge.textContent = '🎉 ' + newUnlock.name + ' unlocked!';
+      badge.textContent = newUnlock.name + ' unlocked!';
       document.getElementById('go-best').appendChild(badge);
     }, 400);
   }
@@ -2340,13 +2362,13 @@ function triggerDeath() {
     if (nextFood) {
       var t = document.createElement('div');
       t.style.cssText = 'margin-top:7px;font-size:0.72rem;color:#a06030;font-weight:600;font-family:Nunito,sans-serif;opacity:0.8;letter-spacing:0.04em;text-align:center;width:100%;display:block';
-      t.textContent = '🍴 next food: ' + nextFood.name + ' at score ' + nextFood.unlock;
+      t.textContent = 'next food: ' + nextFood.name + ' at score ' + nextFood.unlock;
       el.appendChild(t);
     }
     if (nextBg) {
       var t2 = document.createElement('div');
       t2.style.cssText = 'margin-top:4px;font-size:0.72rem;color:#a06030;font-weight:600;font-family:Nunito,sans-serif;opacity:0.8;letter-spacing:0.04em;text-align:center;width:100%;display:block';
-      t2.textContent = '🍽️ next restaurant: ' + nextBg.name + ' at ' + nextBg.unlock + ' games';
+      t2.textContent = 'next restaurant: ' + nextBg.name + ' at ' + nextBg.unlock + ' games';
       el.appendChild(t2);
     }
   }, 400);
@@ -2387,7 +2409,7 @@ function buildFoodGrid() {
       if (!unlocked) {
         var ov = document.createElement('div');
         ov.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,0.48);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px';
-        ov.innerHTML = '<div style="font-size:1rem">🔒</div><div style="font-size:0.5rem;color:#fff;font-weight:800;font-family:Nunito,sans-serif;letter-spacing:0.05em">' + food.unlock + '</div>';
+        ov.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div style="font-size:0.5rem;color:#fff;font-weight:800;font-family:Nunito,sans-serif;letter-spacing:0.05em;margin-top:2px">' + food.unlock + '</div>';
         wrap.appendChild(ov);
       }
 
@@ -2478,7 +2500,7 @@ function buildBgGrid() {
       if (!unlocked) {
         var ov = document.createElement('div');
         ov.className = 'bg-lock-overlay';
-        ov.innerHTML = '<div class="bg-lock-icon">🔒</div><div class="bg-lock-text">' + bg.unlock + ' GAMES</div>';
+        ov.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" class="bg-lock-icon"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="bg-lock-text">' + bg.unlock + ' GAMES</div>';
         cell.appendChild(ov);
       } else if (bg.id === selectedBg) {
         var sel = document.createElement('div');
@@ -2533,7 +2555,7 @@ function checkBgUnlocks(prevGames) {
       setTimeout(function(name) {
         var badge = document.createElement('div');
         badge.style.cssText = 'margin-top:8px;background:#44aaff;color:#fff;font-weight:800;font-size:0.8rem;padding:5px 14px;border-radius:100px;animation:pop 0.4s cubic-bezier(0.2,2,0.4,1) both;letter-spacing:0.08em;font-family:Nunito,sans-serif';
-        badge.textContent = '🍽️ ' + name + ' restaurant unlocked!';
+        badge.textContent = name + ' restaurant unlocked!';
         var el = document.getElementById('go-best');
         if (el) el.appendChild(badge);
       }.bind(null, BACKGROUNDS[i].name), 600);
@@ -2595,6 +2617,7 @@ document.getElementById('info-back-btn').addEventListener('click', function() {
   document.getElementById('info-screen').classList.remove('active');
   document.getElementById('title-screen').classList.add('active');
   showInfoBtn();
+  drawTitleDumpling();
 });
 
 // Hide info btn when leaving title, show when returning
@@ -2666,6 +2689,7 @@ document.getElementById('food-back-btn').addEventListener('click', function() {
     document.getElementById('title-screen').classList.add('active');
     updateTitleBest();
     showInfoBtn();
+    drawTitleDumpling();
   }
 });
 
@@ -2687,9 +2711,14 @@ document.getElementById('go-food-btn').addEventListener('click', function() {
   showFoodScreen('gameover');
 });
 
+function updateSoundIcon() {
+  document.getElementById('sound-icon-off').style.display = soundOn ? 'none' : 'inline';
+  document.getElementById('sound-icon-on').style.display = soundOn ? 'inline' : 'none';
+}
+
 document.getElementById('sound-btn').addEventListener('click', function() {
   soundOn = !soundOn;
-  document.getElementById('sound-btn').textContent = soundOn ? '🔊' : '🔇';
+  updateSoundIcon();
   initAudio();
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function(){});
   if (soundOn) startMusic(); else stopMusic();
@@ -2703,7 +2732,76 @@ function updateTitleBest() {
 }
 updateTitleBest();
 
-// ── Orientation lock ──
+// ── Title dumpling canvas ──
+var titleDumplingCanvas = document.getElementById('title-dumpling-canvas');
+var titleDumplingCtx = titleDumplingCanvas.getContext('2d');
+var titleBounce = 0;
+
+function drawTitleDumpling() {
+  var tc = titleDumplingCtx;
+  tc.clearRect(0, 0, 140, 140);
+  titleBounce = (Date.now() * 0.002) % (Math.PI * 2);
+  var offsetY = Math.sin(titleBounce) * 10;
+  var rot = Math.sin(titleBounce * 0.5) * 0.18;
+  tc.save();
+  tc.translate(70, 70 + offsetY);
+  tc.rotate(rot);
+  // Use existing food drawing at r=52
+  var savedCtx = ctx, savedW = W, savedH = H;
+  ctx = tc; W = 140; H = 140;
+  drawFoodDumpling(52);
+  ctx = savedCtx; W = savedW; H = savedH;
+  tc.restore();
+  if (gameState === STATE.TITLE || document.getElementById('title-screen').classList.contains('active')) {
+    requestAnimationFrame(drawTitleDumpling);
+  }
+}
+
+// ── Death face canvas ──
+function drawDeathFace(fctx, w, h) {
+  fctx.clearRect(0, 0, w, h);
+  var cx = w / 2, cy = h / 2, r = w * 0.42;
+
+  // Face circle
+  var g = fctx.createRadialGradient(cx - r*0.2, cy - r*0.2, 0, cx, cy, r);
+  g.addColorStop(0, '#ffcc88');
+  g.addColorStop(1, '#e89040');
+  fctx.fillStyle = g;
+  fctx.shadowColor = 'rgba(150,80,20,0.3)';
+  fctx.shadowBlur = 10;
+  fctx.beginPath();
+  fctx.arc(cx, cy, r, 0, Math.PI * 2);
+  fctx.fill();
+  fctx.shadowBlur = 0;
+
+  // X eyes
+  var eyeY = cy - r * 0.15;
+  var eyeOffX = r * 0.35;
+  var es = r * 0.15;
+  fctx.strokeStyle = '#5a2a00';
+  fctx.lineWidth = r * 0.09;
+  fctx.lineCap = 'round';
+  // Left X
+  fctx.beginPath(); fctx.moveTo(cx - eyeOffX - es, eyeY - es); fctx.lineTo(cx - eyeOffX + es, eyeY + es); fctx.stroke();
+  fctx.beginPath(); fctx.moveTo(cx - eyeOffX + es, eyeY - es); fctx.lineTo(cx - eyeOffX - es, eyeY + es); fctx.stroke();
+  // Right X
+  fctx.beginPath(); fctx.moveTo(cx + eyeOffX - es, eyeY - es); fctx.lineTo(cx + eyeOffX + es, eyeY + es); fctx.stroke();
+  fctx.beginPath(); fctx.moveTo(cx + eyeOffX + es, eyeY - es); fctx.lineTo(cx + eyeOffX - es, eyeY + es); fctx.stroke();
+
+  // Sad mouth
+  fctx.strokeStyle = '#5a2a00';
+  fctx.lineWidth = r * 0.08;
+  fctx.lineCap = 'round';
+  fctx.beginPath();
+  fctx.arc(cx, cy + r * 0.45, r * 0.28, Math.PI * 0.15, Math.PI * 0.85, false);
+  fctx.stroke();
+
+  // Teardrop
+  fctx.fillStyle = '#88ccff';
+  fctx.beginPath();
+  fctx.arc(cx - eyeOffX + es * 0.3, eyeY + r * 0.35, r * 0.07, 0, Math.PI * 2);
+  fctx.fill();
+}
 function checkOrientation() {
   var overlay = document.getElementById('portrait-overlay');
   var isLandscape = window.innerWidth > window.innerHeight;
@@ -2717,6 +2815,10 @@ checkOrientation();
 
 // ── Start loop ──
 requestAnimationFrame(function(ts) { lastTime = ts; requestAnimationFrame(loop); });
+// Start title dumpling animation
+drawTitleDumpling();
+// Init sound icon state
+updateSoundIcon();
 </script>
 </body>
 </html>
