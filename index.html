@@ -593,17 +593,30 @@ function checkPanCollision() {
   ball.vx -= 2 * dot * nx;
   ball.vy -= 2 * dot * ny;
 
-  // Impart pan's own velocity — preserve direction feel while normalizing speed
+  // Impart pan velocity — cap to prevent crazy side launches
   var panVx = pan.x - pan.px;
   var panVy = pan.y - pan.py;
-  // Add pan influence BEFORE normalize so direction is preserved, magnitude clamped
-  ball.vx += panVx * 2.8;
-  ball.vy += panVy * 2.8;
+  var panSpeed = Math.sqrt(panVx * panVx + panVy * panVy);
+  var maxPanInfluence = getSpeedForScore(score) * 0.4;
+  if (panSpeed > 0.001) {
+    var capScale = Math.min(1, maxPanInfluence / panSpeed);
+    ball.vx += panVx * 2.8 * capScale;
+    ball.vy += panVy * 2.8 * capScale;
+  }
 
-  // Normalize to target speed but allow up to 20% bonus from hard swipes
+  // Enforce minimum vertical component — prevents horizontal infinite loop trap
+  var totalSpd = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+  if (totalSpd > 0.001) {
+    var minVert = totalSpd * 0.25;
+    if (Math.abs(ball.vy) < minVert) {
+      ball.vy = (ball.vy >= 0 ? 1 : -1) * minVert;
+    }
+  }
+
+  // Normalize to target speed, allow small bonus from hard swipes
   var speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
   var target = getSpeedForScore(score);
-  var maxSpeed = target * 1.2;
+  var maxSpeed = target * 1.15;
   if (speed > 0.001) {
     var clampedSpeed = Math.min(speed, maxSpeed);
     ball.vx = (ball.vx / speed) * clampedSpeed;
@@ -611,10 +624,10 @@ function checkPanCollision() {
   }
 
   // Slight horizontal aim influence from hit position on pan face
-  var hitPos = (ball.x - pan.x) / (pan.w / 2); // -1 to 1
+  var hitPos = (ball.x - pan.x) / (pan.w / 2);
   ball.vx += hitPos * 0.5;
 
-  // Push ball well clear of pan so it can't re-trigger next frame
+  // Push ball well clear of pan
   var overlap = ball.r - dist + ball.r * 0.5 + 4;
   ball.x += nx * overlap;
   ball.y += ny * overlap;
